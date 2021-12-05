@@ -19,14 +19,15 @@ class TransactionList extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.purple, width: 2)),
+                      border: Border.all(
+                          color: Theme.of(context).primaryColor, width: 2)),
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    '\$${transactions[index].amount}', //'\' means that first $ should not be treated as a language feature
+                    '\$${transactions[index].amount.toStringAsFixed(2)}', //'\' means that first $ should not be treated as a language feature
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: Colors.purple,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),
@@ -36,7 +37,8 @@ class TransactionList extends StatelessWidget {
                     Text(
                       transactions[index].title,
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          // TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          Theme.of(context).textTheme.headline6,
                     ),
                     Text(
                       DateFormat.yMMMd().format(transactions[index].date),
