@@ -1,6 +1,6 @@
 # flutter_expense_app
-
-A new Flutter project.
+Please get access to this app
+https://zheyuan-robert-xu.github.io/#/ 
 
 ## Getting Started
 
