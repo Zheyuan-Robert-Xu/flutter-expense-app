@@ -1,6 +1,7 @@
 # flutter_expense_app
 Please get access to this app
 https://zheyuan-robert-xu.github.io/#/ 
+Must select a date and click ok to add an transaction.
 
 ## Getting Started
 
