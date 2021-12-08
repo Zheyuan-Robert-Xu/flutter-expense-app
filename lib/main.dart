@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -87,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return tx.date.isAfter(DateTime.now().subtract(
         Duration(days: 7),
       ));
-    }).toList(); // where Returns a new lazy [Iterable] with all elements that satisfy the predicate [test].
+    }).toList(); // where Returns a new lazy [Iterable] with all elements that satisfy the predicate [tx].
   }
 
   void _addNewTransaction(
@@ -128,24 +129,46 @@ class _MyHomePageState extends State<MyHomePage> {
     final mediaQuery = MediaQuery.of(
         context); // do not need to recreate the object: MediaQuery.of(context)
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final appBar = AppBar(
-      title: Text('Personal Expenses'),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => _startAddNewTransaction(context),
-        )
-      ],
-    ); // to get the height of appBar
+    // using PreferredSizeWidget to let dart get preferredSize for iOS
+    final PreferredSizeWidget appBar =
+        defaultTargetPlatform == TargetPlatform.iOS
+            ? CupertinoNavigationBar(
+                middle: Text('Personal Expenses'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize
+                      .min, // make the row shrink along its main axis thus the fist part of bar-chart will not be covered by banchar
+                  children: <Widget>[
+                    // IconButton(
+                    //   icon: Icon(Icons.add),
+                    //   onPressed: () => _startAddNewTransaction(context),
+                    // ),
+                    // whether IconButton is supported by new version of Cupertino should be tested in MAC machine
+                    GestureDetector(
+                      child: Icon(CupertinoIcons.add),
+                      onTap: () => _startAddNewTransaction(context),
+                    ),
+                  ],
+                ),
+              )
+            : AppBar(
+                title: Text('Personal Expenses'),
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () => _startAddNewTransaction(context),
+                  )
+                ],
+              ); // to get the height of appBar
     final txListWidget = Container(
         height: (mediaQuery.size.height -
                 appBar.preferredSize.height -
                 mediaQuery.padding.top) *
             0.7,
         child: TransactionList(_userTransactions, _deleteTransaction));
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+
+    final pageBody = SafeArea(
+      // SafeArea is for ios the header not overlap with the upper part
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -154,7 +177,10 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Show Chart'),
+                  Text(
+                    'Show Chart',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
                   Switch.adaptive(
                       // for the ios looking use .adaptive
                       activeColor: Theme.of(context).accentColor,
@@ -186,14 +212,24 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton:
-          defaultTargetPlatform == TargetPlatform.iOS // to check the platform
-              ? null
-              : FloatingActionButton(
-                  child: Icon(Icons.add),
-                  onPressed: () => _startAddNewTransaction(context),
-                ),
     );
+    return defaultTargetPlatform == TargetPlatform.iOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: defaultTargetPlatform ==
+                    TargetPlatform.iOS // to check the platform
+                ? null
+                : FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () => _startAddNewTransaction(context),
+                  ),
+          );
   }
 }

@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../widgets/adapative_button.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTx;
@@ -26,7 +31,8 @@ class _NewTransactionState extends State<NewTransaction> {
       return;
     }
 
-    widget.addTx(enteredTitle, enteredAmount, _selectedDate);
+    widget.addTx(enteredTitle, enteredAmount,
+        _selectedDate); // pass the value to the widget
 
     Navigator.of(context)
         .pop(); // in the State, can use context even not defining it. Go to the pop page
@@ -39,7 +45,7 @@ class _NewTransactionState extends State<NewTransaction> {
             firstDate: DateTime(2021),
             lastDate: DateTime.now())
         .then((pickedDate) {
-      // then is the future function (user pick the date) and will execute the following code even if user not using the code
+      // then - is the future function (user pick the date) and will execute the following code even if user not using the code
       if (pickedDate == null) {
         return;
       }
@@ -64,6 +70,7 @@ class _NewTransactionState extends State<NewTransaction> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
+              //CupertinoTextField(), // ctrl+space get the hint of methods
               TextField(
                 decoration: InputDecoration(labelText: 'Title'),
                 controller: _titleController,
@@ -73,8 +80,7 @@ class _NewTransactionState extends State<NewTransaction> {
                 decoration: InputDecoration(labelText: 'Amount'),
                 controller: _amountController,
                 keyboardType: TextInputType.number,
-                onSubmitted: (_) =>
-                    _submitData(), // _ indicates that I do not use it
+                onSubmitted: (_) => _submitData(), // _ indicates no parameter
               ), // get the user input
               Container(
                 height: 70,
@@ -85,14 +91,7 @@ class _NewTransactionState extends State<NewTransaction> {
                           ? 'No Date Chosen!'
                           : 'Picked Date ${DateFormat.yMd().format(_selectedDate)}'),
                     ),
-                    FlatButton(
-                      textColor: Theme.of(context).primaryColor,
-                      child: Text(
-                        'Choose Date',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: _presentDatePicker,
-                    )
+                    AdaptiveFlatButton('Choose Date', _presentDatePicker)
                   ],
                 ),
               ),

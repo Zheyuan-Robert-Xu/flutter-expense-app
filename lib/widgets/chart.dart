@@ -33,7 +33,7 @@ class Chart extends StatelessWidget {
   double get totalSpending {
     return groupedTransactionValues.fold(0.0, (sum, item) {
       return sum + item['amount'];
-    }); // fold changes a list tp another type, with a certain logic we define in the function
+    }); // fold changes a list to another type, with a certain logic we define in the function
   }
 
   @override
