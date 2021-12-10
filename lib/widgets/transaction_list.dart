@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import './transaction_item.dart';
 import '../models/transaction.dart';
-import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
@@ -33,48 +33,16 @@ class TransactionList extends StatelessWidget {
               ],
             );
           })
-        : ListView.builder(
-            // using ListView.builder, only load what's visible and not loaded/ rendered
-            itemBuilder: (ctx, index) {
-              return Card(
-                elevation: 5,
-                margin: EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 5,
-                ),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    child: Padding(
-                      padding: EdgeInsets.all(6),
-                      child: FittedBox(
-                        child: Text('\$${transactions[index].amount}'),
-                      ),
-                    ),
-                  ),
-                  title: Text(
-                    transactions[index].title,
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                  subtitle: Text(
-                    DateFormat.yMMMd().format(transactions[index].date),
-                  ),
-                  trailing: MediaQuery.of(context).size.width > 460
-                      ? FlatButton.icon(
-                          icon: Icon(Icons.delete),
-                          label: Text('Delete'),
-                          textColor: Theme.of(context).errorColor,
-                          onPressed: () => deleteTx(transactions[index].id),
-                        )
-                      : IconButton(
-                          icon: Icon(Icons.delete),
-                          color: Theme.of(context).errorColor,
-                          onPressed: () => deleteTx(transactions[index].id),
-                        ),
-                ),
-              );
-            }, // ListView is infinite in height and thus must be given the constraints
-            itemCount: transactions.length,
-          );
+        : ListView(children: [
+            // ListView.builder for only loading what's visible and not loaded. But delete one, the colors of others will be changed.
+            ...transactions
+                .map((tx) => TransactionItem(
+                    key: ValueKey(tx
+                        .id), // delete the iten, the remaining item's color will not change. Unlike UniqueKey(), ValueKey() does not (re-)calculate
+                    // a random value but wraps a non-changing identifier provided by you.
+                    transaction: tx,
+                    deleteTx: deleteTx))
+                .toList(), // ListView is infinite in height and thus must be given the constraints
+          ]);
   }
 }
