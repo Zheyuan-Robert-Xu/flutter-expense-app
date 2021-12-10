@@ -23,8 +23,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Personal Expenses',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-        accentColor: Colors.amber,
         errorColor: Colors.red,
         fontFamily: "Quicksand",
         appBarTheme: AppBarTheme(
@@ -51,7 +49,13 @@ class MyApp extends StatelessWidget {
           fontSize: 18,
           fontWeight: FontWeight.bold,
         )),
-        buttonColor: Colors.white,
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.deepPurple, //  <-- dark color
+          textTheme:
+              ButtonTextTheme.primary, //  <-- this auto selects the right color
+        ),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
+            .copyWith(secondary: Colors.amber),
       ),
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
@@ -84,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     super.initState(); // trigger a listener
   }
 
@@ -93,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   dispose() {
-    WidgetsBinding.instance.removeObserver(this); // clean all the listeners
+    WidgetsBinding.instance!.removeObserver(this); // clean all the listeners
     super.dispose();
   }
 
@@ -189,35 +193,34 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         context); // do not need to recreate the object: MediaQuery.of(context)
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
     // using PreferredSizeWidget to let dart get preferredSize for iOS
-    final PreferredSizeWidget appBar =
-        defaultTargetPlatform == TargetPlatform.iOS
-            ? CupertinoNavigationBar(
-                middle: Text('Personal Expenses'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize
-                      .min, // make the row shrink along its main axis thus the fist part of bar-chart will not be covered by banchar
-                  children: <Widget>[
-                    // IconButton(
-                    //   icon: Icon(Icons.add),
-                    //   onPressed: () => _startAddNewTransaction(context),
-                    // ),
-                    // whether IconButton is supported by new version of Cupertino should be tested in MAC machine
-                    GestureDetector(
-                      child: Icon(CupertinoIcons.add),
-                      onTap: () => _startAddNewTransaction(context),
-                    ),
-                  ],
+    final dynamic appBar = defaultTargetPlatform == TargetPlatform.iOS
+        ? CupertinoNavigationBar(
+            middle: Text('Personal Expenses'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize
+                  .min, // make the row shrink along its main axis thus the fist part of bar-chart will not be covered by banchar
+              children: <Widget>[
+                // IconButton(
+                //   icon: Icon(Icons.add),
+                //   onPressed: () => _startAddNewTransaction(context),
+                // ),
+                // whether IconButton is supported by new version of Cupertino should be tested in MAC machine
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () => _startAddNewTransaction(context),
                 ),
+              ],
+            ),
+          )
+        : AppBar(
+            title: Text('Personal Expenses'),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => _startAddNewTransaction(context),
               )
-            : AppBar(
-                title: Text('Personal Expenses'),
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () => _startAddNewTransaction(context),
-                  )
-                ],
-              ); // to get the height of appBar
+            ],
+          ); // to get the height of appBar
     final txListWidget = Container(
         height: (mediaQuery.size.height -
                 appBar.preferredSize.height -
