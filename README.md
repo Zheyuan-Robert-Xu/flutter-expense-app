@@ -1,17 +1,16 @@
 # flutter_expense_app
 Please get access to this app
-https://zheyuan-robert-xu.github.io/#/ 
-Must select a date and click ok to add an transaction.
+https://zheyuan-robert-xu.github.io/#/ <br />
+Need to select a date and click ok in the Modal window to add an transaction.
 
-## Getting Started
+## Dart Null Safety updates
+Original project use Dart 2.11.0. To migrate to Dart 2.12.0+, issues of null safety are solved.
+<ol>
+  <li>Use “?” to specify that a variable can be null</li>
+  <li>Use "!" to convert from a nullable to a non-nullable type.</li>
+  <li>Update package intl: ^0.17.0 </li>
+</ol> 
 
-This project is a starting point for a Flutter application.
+## Reference
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project is referenced from Udemy course <strong><em>Flutter & Dart - The Complete Guide [2022 Edition] (https://www.udemy.com/course/learn-flutter-dart-to-build-ios-android-apps/)</em></strong>.
