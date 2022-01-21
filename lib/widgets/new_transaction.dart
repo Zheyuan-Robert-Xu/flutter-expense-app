@@ -22,7 +22,7 @@ class _NewTransactionState extends State<NewTransaction> {
   void initState() {
     // TODO: implement initState only make a HTTP request and load some data from a server or load some data
     super
-        .initState(); // debugging-only check, which will have no impact in production mode.
+        .initState(); // debugging-only check, which will have no impact in production mode..
   }
 
   @override
